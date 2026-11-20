@@ -44,6 +44,8 @@ response = client.responses.create(
 print(response.output_text)
 ```
 
+The [preference-memory example](examples/responses/loom_memory/README.md) shows explicit function tools, complete output replay and offline tests with an optional Loom client.
+
 The previous standard (supported indefinitely) for generating text is the [Chat Completions API](https://platform.openai.com/docs/api-reference/chat). You can use that API to generate text from the model with the code below.
 
 ```python
