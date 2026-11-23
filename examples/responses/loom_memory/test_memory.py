@@ -74,18 +74,21 @@ async def memory(
     def create_client(**kwargs: Any) -> httpx.AsyncClient:
         return real_client(**kwargs, transport=httpx.MockTransport(send), trust_env=False)
 
-    monkeypatch.setattr("loom.transport.httpx.AsyncClient", create_client)
-    async with LoomAgent(
-        org="fixture-org",
-        namespace="fixture-preferences",
-        agent="fixture-assistant",
-        base_url="https://loom.example.invalid",
-        api_key="fixture-not-a-secret",
-        auto_run=False,
-        mentor_brief=False,
-        coalesce_sets=False,
-        retry={"max_attempts": 1},
-    ) as agent:
+    # Runtime type checks need the real HTTPX client class.
+    with monkeypatch.context() as construction:
+        construction.setattr("loom.transport.httpx.AsyncClient", create_client)
+        agent = LoomAgent(
+            org="fixture-org",
+            namespace="fixture-preferences",
+            agent="fixture-assistant",
+            base_url="https://loom.example.invalid",
+            api_key="fixture-not-a-secret",
+            auto_run=False,
+            mentor_brief=False,
+            coalesce_sets=False,
+            retry={"max_attempts": 1},
+        )
+    async with agent:
         yield PreferenceMemory(agent, user_id="fixture-user"), requests, replies
 
 

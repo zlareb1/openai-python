@@ -992,6 +992,7 @@ def test_untrusted_provenance_leaves_no_dependency_install_reachable(tmp_path: P
         "build",
         "browser-demo-types",
         "optional-provider-types",
+        "loom-memory-example",
         "test",
         "examples",
         "compatibility",
